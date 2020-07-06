@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW X6 -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="41.2505mm" height="41.2505mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 902 902"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .fil4 {fill:none}
+    .fil7 {fill:#00ABD6}
+    .fil6 {fill:#33CC33}
+    .fil3 {fill:#AAB2BD}
+    .fil2 {fill:#CCD1D9}
+    .fil1 {fill:#E6E9ED}
+    .fil0 {fill:#FCC938}
+    .fil5 {fill:red}
+   ]]>
+  </style>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <g id="_895600848">
+   <g>
+    <rect class="fil0" x="174" width="591" height="684" rx="58" ry="49"/>
+    <g>
+     <polygon class="fil1" points="125,66 714,66 714,806 125,806 "/>
+     <polygon class="fil2" points="714,806 837,899 247,899 125,806 "/>
+     <polygon class="fil3" points="837,159 837,899 714,806 714,66 "/>
+    </g>
+   </g>
+   <rect class="fil4" width="902" height="902"/>
+   <g>
+    <path class="fil5" d="M456 232l148 321c12,27 0,60 -27,72l-170 79 -34 15c-27,13 -59,1 -72,-26l-148 -321c-12,-28 -1,-60 27,-73l203 -93c2,-1 4,-2 6,-3 26,-8 55,4 67,29z"/>
+    <path class="fil0" d="M532 236c33,110 66,221 98,331 9,29 -7,58 -35,67 -59,17 -117,35 -176,52 -11,4 -23,7 -35,10 -28,9 -58,-7 -66,-35 -33,-111 -66,-222 -99,-332 -8,-28 8,-58 36,-67 70,-21 140,-41 210,-62 2,-1 4,-1 6,-2 26,-4 53,11 61,38z"/>
+    <path class="fil6" d="M608 239c16,114 33,228 49,343 5,29 -16,56 -45,60 -60,9 -121,18 -181,26 -12,2 -24,4 -36,6 -29,4 -56,-16 -60,-45 -17,-115 -34,-229 -50,-343 -4,-29 16,-56 45,-61 72,-10 145,-21 217,-31 2,0 4,-1 6,-1 27,-1 51,19 55,46z"/>
+    <path class="fil7" d="M684 243l0 353c0,30 -24,55 -54,55l-187 0 -37 0c-30,0 -55,-24 -55,-54l0 -354c0,-30 24,-54 54,-54l224 -1c2,0 4,0 6,0 27,3 49,26 49,55z"/>
+   </g>
+  </g>
+ </g>
+</svg>

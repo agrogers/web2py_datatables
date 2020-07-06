@@ -1,0 +1,20 @@
+
+{{extend 'layout.html'}}
+
+
+<!-- Import all the css and js that datatables needs -->
+<div id="dt1-placeholder"></div>
+{{=LOAD('datatable','files.load',ajax=False)}}
+
+<script>
+    // I don't know how to easily tell custom widgets what table and id they apply to. I need this for the Media widget where it has to save the media choice against an existing record
+    var CurrentTableName = null
+    var Current_id = null
+
+// I would like to put this script into the datatables.load file but dt_settings returned from the server  is not available    
+    {{ =ASSIGNJS(dt_settings = dt_settings) }}
+
+    dt1 = new DatatableGrid();
+    dt1.Initialise(dt_settings, 'dt1-placeholder')
+
+</script>

@@ -1,0 +1,2 @@
+def datatables():
+    return locals()

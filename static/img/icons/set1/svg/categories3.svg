@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW X6 -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="35.9694mm" height="34.3298mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 4963 4737"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .fil3 {fill:#5AB8EC}
+    .fil8 {fill:#6C6B69}
+    .fil0 {fill:#78AF42}
+    .fil4 {fill:#997CAA}
+    .fil6 {fill:#CACACA}
+    .fil2 {fill:#CDCDCD}
+    .fil1 {fill:#E6E6E6}
+    .fil7 {fill:#E85AA0}
+    .fil5 {fill:#FDBE4A}
+   ]]>
+  </style>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <g id="_1068127920">
+   <polygon id="XMLID_4266_" class="fil0" points="3595,2969 4243,1846 4891,2969 "/>
+   <polygon id="XMLID_4267_" class="fil1" points="3698,0 4963,0 4963,1276 3698,1276 "/>
+   <path id="XMLID_1380_" class="fil2" d="M4843 557l-444 0 88 -79c48,-43 53,-116 10,-164 -43,-48 -117,-53 -165,-10l-296 263c-80,38 -104,155 -32,212l334 263c49,39 124,30 163,-19 40,-51 31,-124 -19,-164l-88 -70 449 1c64,0 117,-53 117,-117 0,-64 -53,-116 -117,-116l0 0z"/>
+   <polygon id="XMLID_4271_" class="fil3" points="4135,4689 3819,4457 3698,4082 3819,3707 4135,3476 4526,3476 4843,3707 4963,4082 4843,4457 4526,4689 "/>
+   <polygon id="XMLID_4257_" class="fil4" points="1976,1898 2982,1898 2982,2956 1976,2956 "/>
+   <polygon id="XMLID_4259_" class="fil5" points="2479,130 2643,485 3028,533 2744,800 2819,1185 2479,995 2139,1185 2213,800 1929,533 2315,485 "/>
+   <polygon id="XMLID_4270_" class="fil6" points="2476,4737 1849,4099 2482,3466 3109,4104 "/>
+   <ellipse id="XMLID_4258_" class="fil7" cx="679" cy="2427" rx="633" ry="638"/>
+   <polygon id="XMLID_4260_" class="fil3" points="339,1256 0,672 339,89 1018,89 1357,672 1018,1256 "/>
+   <polygon id="XMLID_250_" class="fil8" points="871,3642 1104,3642 1104,3939 871,3939 "/>
+   <polygon id="XMLID_251_" class="fil8" points="254,3642 487,3642 487,3939 254,3939 "/>
+   <polygon id="XMLID_252_" class="fil8" points="871,4264 1104,4264 1104,4561 871,4561 "/>
+   <polygon id="XMLID_253_" class="fil8" points="254,4264 487,4264 487,4561 254,4561 "/>
+  </g>
+ </g>
+</svg>

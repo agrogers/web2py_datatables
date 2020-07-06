@@ -1,0 +1,210 @@
+/* ==============DataTables ===================================== */
+:root {
+  --highlight-color: rgb(234, 255, 143);
+  --exclude-color: rgb(109, 98, 94);
+  --odd-color: #f9f9f9;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+  padding-top: 0px !important;
+}
+/* Header row */
+
+.dataTables_wrapper {
+  background-color: rgba(245, 245, 245, 0.5);
+  padding-top: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 7px;
+}
+.dataTable thead {
+  background-color: rgba(211, 211, 211, 0.8);
+}
+
+/* Input Fields */
+
+div.dataTables_wrapper div.dataTables_filter {
+  margin-top: 5px; /* Correct the vertial alignment of the search control. There is something dodgy with the setting of the classes for this control. I don't think  it is my doing. */
+}
+div.dataTables_wrapper div.dataTables_filter input {
+  width: 100px !important;
+}
+input.search, [type="search"] {
+    background-image: url('/smartdeck/static/img/icons/set1/svg/searching-magnifying-glass.svg');
+    background-size: 8px;
+    background-repeat: no-repeat;
+    background-position: 2px, 50%;
+    opacity: 0.6;
+    border-width: 1px;
+    border-color: lightgrey;
+    border-radius: 5px;
+    text-indent: 8px;
+    width:100%;
+}
+
+input.search:focus {
+    border-width: 1px;
+    border-style: solid;
+    background-image:url('');
+    text-indent: 0px;
+}
+.datatable-icon {
+  width: 24px;
+  align-self: center;
+  margin-right: 0px;
+  margin-bottom: 5px;
+}
+.datatable-heading {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    font-size: 1.5em;
+  }
+  .datatable-subheading {
+    align-self: center;
+    font-size: 0.9em;
+  }
+  .datatable-subheading-filter {
+    margin-left: 10px;
+    margin-right: 2px;
+    width: 12px;
+  }
+  .dt-row-images {
+    height: 24px;
+    width: auto;
+  }
+  .dt-boolean {
+    display: none;
+  }
+  /* DataTables Override */
+  table.dataTable {
+    font-size: 0.9em;
+  }
+  table.dataTable tfoot th {padding: 3px !important;}
+  table.dataTable thead th {
+    padding: 3px !important;
+    font-size: 1em;
+  }
+  table.dataTable tbody td {
+      padding-top: 5px !important;
+      padding-bottom: 1px !important;
+      padding-left: 5px !important;
+      padding-right: 5px !important;
+    }
+  table.dataTable img {
+    max-width: 100px;
+  }
+  /* Change the color of the child area when expanded */
+  table.table-bordered.dataTable td:last-child {
+    background-color: whitesmoke;
+  }
+  /* Target odd rows when the child section is expanded */
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--odd-color);
+  }
+  table.dataTable tr.Highlight > .sorting_1 {
+      background-color: var(--highlight-color) !important;
+  }
+  tr.Highlight {
+    background-color: var(--highlight-color) !important;
+  }
+  table.dataTable tr.Exclude > .sorting_1 {
+    background-color: var(--exclude-color) !important;
+  }
+  table.dataTable tr.Exclude > .sorting_2 {
+    background-color: var(--exclude-color) !important;
+  }
+  tr.Exclude {
+    background-color: var(--exclude-color) !important;
+    text-decoration: line-through;
+  }
+  
+  table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>td:first-child:before, table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>th:first-child:before {
+    background-color: grey !important;
+  }
+  
+  table.dataTable.dtr-inline.collapsed>tbody>tr.parent>td:first-child:before, table.dataTable.dtr-inline.collapsed>tbody>tr.parent>th:first-child:before {
+    background-color: grey !important;
+  }
+  
+  table.dataTable>tbody>tr.child ul.dtr-details {
+    font-size: 0.95em;
+  }
+  
+  table.dataTable>tbody>tr.child ul.dtr-details>li {padding: 1px !important;}
+  table.dataTable>tbody>tr.child span.dtr-title {
+    background-color: rgba(211, 211, 211, 0.7);
+    border-radius: 5px;
+    margin-right: 5px;
+    min-width: 0px !important;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  
+  /* Hide the extra arrows on the grid */
+  table.dataTable thead .sorting_asc:after {display: none !important;}
+  table.dataTable thead .sorting_asc:before {display: none !important;}
+  table.dataTable thead .sorting_desc:before {display: none !important;}
+  table.dataTable thead .sorting_desc:after {display: none !important;}
+  table.dataTable thead .sorting:before {display: none !important;}
+  table.dataTable thead .sorting:after {display: none !important;}
+  
+  /* Float the top buttons on the right
+    .dataTables_wrapper .dt-buttons {
+      float:right;
+    }
+  */
+  
+
+span.numbered-tabs {
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 15px;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: darkgray;
+  color: white;
+}
+
+.dtr-data {
+  white-space: pre-wrap;
+}
+
+/* Reference links hover */
+.reference_link {
+  position: relative
+}
+.reference_link img{
+  margin-right: 3px;
+  margin-left: 3px;
+  margin-bottom: 2px;
+  width: 16px;
+}
+.reference_link span{
+  position: absolute;
+  background: rgba(0, 0, 0, 0.726);
+  color: white;
+  margin-bottom: 5px;
+  padding-left: 3px;
+  padding-right: 3px;
+  border-radius: 3px;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: visibility 0s, opacity 0.5s linear; 
+  transition: visibility 0s, opacity 0.5s linear;
+  width: max-content;
+  z-index: 777;
+  top: -30px;
+  left: 0px;
+ }
+ 
+ /* Hover on Parent Container */
+ .reference_link:hover{
+  cursor: pointer;
+ }
+ 
+ .reference_link:hover span{
+  /* width: 150px;
+  padding: 8px 15px; */
+  visibility: visible;
+  opacity: 1; 
+ }

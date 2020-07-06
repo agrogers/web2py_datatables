@@ -1,0 +1,576 @@
+timestamp: 2020-07-06T16:16:02.933060
+CREATE TABLE "Languages"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "Code" CHAR(512),
+    "LongName" CHAR(512),
+    "ShortName" CHAR(512)
+);
+success!
+timestamp: 2020-07-06T16:16:03.156383
+CREATE TABLE "auth_user"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "DisplayName" CHAR(128),
+    "username" CHAR(512),
+    "first_name" CHAR(128),
+    "last_name" CHAR(128),
+    "email" CHAR(128) UNIQUE,
+    "password" CHAR(512),
+    "PreferredLanguageID" INTEGER REFERENCES "Languages" ("id") ON DELETE CASCADE  ,
+    "DOB" DATE,
+    "address" CHAR(512),
+    "city" CHAR(512),
+    "zip" CHAR(512),
+    "phone" CHAR(512),
+    "registration_key" CHAR(512),
+    "reset_password_key" CHAR(512),
+    "registration_id" CHAR(512)
+);
+success!
+timestamp: 2020-07-06T16:16:03.342669
+CREATE TABLE "auth_group"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "role" CHAR(512),
+    "description" TEXT
+);
+success!
+timestamp: 2020-07-06T16:16:03.514070
+CREATE TABLE "auth_membership"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "user_id" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "group_id" INTEGER REFERENCES "auth_group" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:03.681276
+CREATE TABLE "auth_permission"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "group_id" INTEGER REFERENCES "auth_group" ("id") ON DELETE CASCADE  ,
+    "name" CHAR(512),
+    "table_name" CHAR(512),
+    "record_id" INTEGER
+);
+success!
+timestamp: 2020-07-06T16:16:03.865484
+CREATE TABLE "auth_event"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "time_stamp" TIMESTAMP,
+    "client_ip" CHAR(512),
+    "user_id" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "origin" CHAR(512),
+    "description" TEXT
+);
+success!
+timestamp: 2020-07-06T16:16:04.020396
+CREATE TABLE "auth_cas"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "user_id" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "created_on" TIMESTAMP,
+    "service" CHAR(512),
+    "ticket" CHAR(512),
+    "renew" CHAR(1)
+);
+success!
+timestamp: 2020-07-06T16:16:04.282400
+CREATE TABLE "Media"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "Description" CHAR(255),
+    "OriginalFilename" CHAR(255),
+    "FileReference" CHAR(200),
+    "Icon" CHAR(200),
+    "MediaType" TEXT,
+    "IsWallpaper" CHAR(1),
+    "IsCardBack" CHAR(1),
+    "IsSuccessSound" CHAR(1),
+    "IsFailSound" CHAR(1),
+    "IsProgressBar" CHAR(1),
+    "IsAvatar" CHAR(1),
+    "IsGame" CHAR(1),
+    "NaturalWidth" INTEGER,
+    "NaturalHeight" INTEGER,
+    "Settings" CHAR(512),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:04.495319
+CREATE TABLE "ContentType"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "LongName" CHAR(255),
+    "ShortName" CHAR(512),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:04.683212
+CREATE TABLE "Organisation"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "LongName" CHAR(255),
+    "ShortName" CHAR(255),
+    "email" CHAR(512),
+    "PreferredLanguage" TEXT,
+    "isactive" CHAR(1),
+    "Logo" CHAR(200),
+    "DefaultAvatar" INTEGER,
+    "DefaultWallpaper" INTEGER,
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:04.913174
+CREATE TABLE "OrganisationUser"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "OrganisationID" INTEGER REFERENCES "Organisation" ("id") ON DELETE CASCADE  ,
+    "UserID" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "AvatarStockItemID" INTEGER,
+    "WallpaperStockItemID" INTEGER,
+    "auth_group_id" INTEGER REFERENCES "auth_group" ("id") ON DELETE CASCADE  ,
+    "SMSid" CHAR(512),
+    "DateStart" DATE,
+    "DateEnd" DATE,
+    "IsTeacher" CHAR(1),
+    "IsStudent" CHAR(1),
+    "IsActive" CHAR(1),
+    "Status" CHAR(512),
+    "TotalPoints" INTEGER,
+    "TotalGold" INTEGER,
+    "TotalSilver" INTEGER,
+    "TotalBronze" INTEGER,
+    "Progress" INTEGER,
+    "TotalCards" INTEGER,
+    "DueCards" INTEGER,
+    "ActiveCards" INTEGER,
+    "LearntCards" INTEGER,
+    "ReviewCount" INTEGER,
+    "CorrectCount" INTEGER,
+    "AvgStreak" DOUBLE,
+    "AvgCurrentInterval" DOUBLE,
+    "AvgDifficulty" DOUBLE,
+    "LastReview" TIMESTAMP,
+    "Selected" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:05.127050
+CREATE TABLE "CardCategory"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "LongName" CHAR(512),
+    "ShortName" CHAR(512),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:05.443037
+CREATE TABLE "CardMaster"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "Name" CHAR(512),
+    "Categories" TEXT,
+    "Description" CHAR(512),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:05.693932
+CREATE TABLE "CardMasterContent"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "CardMasterID" INTEGER REFERENCES "CardMaster" ("id") ON DELETE CASCADE  ,
+    "Lang" CHAR(512),
+    "LangWrittenIn" CHAR(512),
+    "ContentType" CHAR(512),
+    "ContentMediaID" INTEGER REFERENCES "Media" ("id") ON DELETE CASCADE  ,
+    "ContentText" CHAR(512),
+    "RelatedCards" CHAR(512),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:05.901829
+CREATE TABLE "CardStructure"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "LongName" CHAR(512),
+    "ShortName" CHAR(512),
+    "FrontFaceStructure" CHAR(512),
+    "BackFaceStructure" CHAR(512),
+    "Tags" CHAR(512),
+    "Lang" CHAR(512),
+    "MultiChoiceImages" CHAR(512),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:06.101703
+CREATE TABLE "Card"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "CardMasterID" INTEGER REFERENCES "CardMaster" ("id") ON DELETE CASCADE  ,
+    "CardStructureID" INTEGER REFERENCES "CardStructure" ("id") ON DELETE CASCADE  ,
+    "RenderSizes" CHAR(512),
+    "FrontFaceStructure" CHAR(512),
+    "BackFaceStructure" CHAR(512),
+    "FrontFaceRendered" CHAR(512),
+    "BackFaceRendered" CHAR(512),
+    "LongName" CHAR(512),
+    "Details" CHAR(512),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:06.333567
+CREATE TABLE "PresentationOption"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "LongName" CHAR(512),
+    "ShortName" CHAR(512),
+    "IsGame" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:06.589532
+CREATE TABLE "Deck"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "LongName" CHAR(512),
+    "ShortName" CHAR(512),
+    "DefaultCardStructureID" INTEGER REFERENCES "CardStructure" ("id") ON DELETE CASCADE  ,
+    "IsPublic" CHAR(1),
+    "OwnerByOrganisationID" INTEGER REFERENCES "Organisation" ("id") ON DELETE CASCADE  ,
+    "DeckImageID" INTEGER REFERENCES "Media" ("id") ON DELETE CASCADE  ,
+    "CardCriteria" CHAR(512),
+    "ChildDeckIDList" TEXT,
+    "ParentDeckIDList" TEXT,
+    "QuestionCardSize" CHAR(512),
+    "QuestionCardOrientation" CHAR(512),
+    "AnswerCardSize" CHAR(512),
+    "AnswerCardOrientation" CHAR(512),
+    "PresentationOptions" TEXT,
+    "CardCount" INTEGER,
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:06.850515
+CREATE TABLE "DeckChild"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "ChildDeckID" INTEGER REFERENCES "Deck" ("id") ON DELETE CASCADE  ,
+    "DeckID" INTEGER REFERENCES "Deck" ("id") ON DELETE CASCADE  ,
+    "Include" CHAR(1),
+    "StartOffset" INTEGER,
+    "StartDate" DATE,
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:07.186322
+CREATE TABLE "DeckCard"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "DeckID" INTEGER REFERENCES "Deck" ("id") ON DELETE CASCADE  ,
+    "CardID" INTEGER REFERENCES "Card" ("id") ON DELETE CASCADE  ,
+    "Include" CHAR(1),
+    "LongName" CHAR(512),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:07.559289
+CREATE TABLE "TeachingGroup"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "LongName" CHAR(512),
+    "ShortName" CHAR(512),
+    "OrganisationID" INTEGER REFERENCES "Organisation" ("id") ON DELETE CASCADE  ,
+    "TeacherUserID" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "StartDate" DATE,
+    "EndDate" DATE,
+    "Period" CHAR(512),
+    "IsActive" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:07.788415
+CREATE TABLE "TeachingGroupStudent"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "TeachingGroupID" INTEGER REFERENCES "TeachingGroup" ("id") ON DELETE CASCADE  ,
+    "StudentUserID" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "IsEnrolled" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:07.998074
+CREATE TABLE "TeachingGroupDeck"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "TeachingGroupID" INTEGER REFERENCES "TeachingGroup" ("id") ON DELETE CASCADE  ,
+    "DeckID" INTEGER REFERENCES "Deck" ("id") ON DELETE CASCADE  ,
+    "IsActive" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:08.422621
+CREATE TABLE "UserCard"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "StudentUserID" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "CardID" INTEGER REFERENCES "Card" ("id") ON DELETE CASCADE  ,
+    "Status" CHAR(512),
+    "ReviewCount" INTEGER,
+    "CorrectCount" INTEGER,
+    "Streak" INTEGER,
+    "CurrentInterval" DOUBLE,
+    "LastReview" TIMESTAMP,
+    "Due" TIMESTAMP,
+    "Difficulty" DOUBLE,
+    "LastResult" CHAR(512),
+    "LastPoints" INTEGER,
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:08.810553
+CREATE TABLE "UserDeck"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "StudentUserID" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "DeckID" INTEGER REFERENCES "Deck" ("id") ON DELETE CASCADE  ,
+    "TotalCards" INTEGER,
+    "DueCards" INTEGER,
+    "ActiveCards" INTEGER,
+    "LearntCards" INTEGER,
+    "Status" CHAR(512),
+    "ReviewCount" INTEGER,
+    "CorrectCount" INTEGER,
+    "AvgStreak" DOUBLE,
+    "AvgCurrentInterval" DOUBLE,
+    "AvgDifficulty" DOUBLE,
+    "LastReview" TIMESTAMP,
+    "Progress" INTEGER,
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:09.188658
+CREATE TABLE "UserCardHistory"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "UserCardID" INTEGER REFERENCES "UserCard" ("id") ON DELETE CASCADE  ,
+    "ReviewDate" DATE,
+    "ReviewCount" INTEGER,
+    "CorrectCount" INTEGER,
+    "TotalTime" TIME,
+    "Points" INTEGER,
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:09.649043
+CREATE TABLE "CardAnswer"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "CardID" INTEGER REFERENCES "Card" ("id") ON DELETE CASCADE  ,
+    "AnswerCardID" INTEGER REFERENCES "Card" ("id") ON DELETE CASCADE  ,
+    "AnswerCount" INTEGER,
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:10.006792
+CREATE TABLE "ItemType"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "Description" CHAR(512),
+    "IsShopItem" CHAR(1),
+    "IsMediaItem" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:10.424135
+CREATE TABLE "StockItem"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "Description" CHAR(512),
+    "ItemType" INTEGER REFERENCES "ItemType" ("id") ON DELETE CASCADE  ,
+    "OrganisationID" INTEGER REFERENCES "Organisation" ("id") ON DELETE CASCADE  ,
+    "MediaID" INTEGER REFERENCES "Media" ("id") ON DELETE CASCADE  ,
+    "Status" CHAR(512),
+    "PricePoints" INTEGER,
+    "RestockDelay" INTEGER,
+    "PriceAdjustmentFactor" INTEGER,
+    "Availability" CHAR(512),
+    "Qty" INTEGER,
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:10.873963
+CREATE TABLE "ShopItem"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "StockItemID" INTEGER REFERENCES "StockItem" ("id") ON DELETE CASCADE  ,
+    "OwnerUserID" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "BuyerUserID" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "Status" CHAR(512),
+    "PricePoints" INTEGER,
+    "OfferPoints" INTEGER,
+    "AvailableDateTime" TIMESTAMP,
+    "CompleteByDateTime" TIMESTAMP,
+    "Qty" INTEGER,
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:11.059913
+CREATE TABLE "UserItem"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "OrganisationUserID" INTEGER REFERENCES "OrganisationUser" ("id") ON DELETE CASCADE  ,
+    "StockItemID" INTEGER REFERENCES "StockItem" ("id") ON DELETE CASCADE  ,
+    "Status" CHAR(512),
+    "Favourite" CHAR(1),
+    "History" CHAR(512),
+    "PricePoints" INTEGER,
+    "Qty" INTEGER,
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:11.437681
+CREATE TABLE "EventLog"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "LogType" CHAR(512),
+    "EventAction" CHAR(512),
+    "ObjectID" INTEGER,
+    "UserID" INTEGER,
+    "Settings" CHAR(512),
+    "Processed" CHAR(1),
+    "LogFunction" CHAR(512),
+    "LogMessage" TEXT,
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:12.299451
+CREATE TABLE "UploadTemplate"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "Description" CHAR(512),
+    "OriginalFilename" CHAR(512),
+    "FileReference" CHAR(512),
+    "Settings" TEXT,
+    "Fields" TEXT,
+    "Processed" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:12.515310
+CREATE TABLE "Registry"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "CustomSQL" CHAR(512),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:12.751196
+CREATE TABLE "post"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "your_message" TEXT,
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T16:16:12.972145
+CREATE TABLE "user_pictures"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "userr" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE   UNIQUE,
+    "picture" CHAR(512),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-06T18:01:02.855711
+CREATE TABLE "DatabaseModel"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "TableName" CHAR(512),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
