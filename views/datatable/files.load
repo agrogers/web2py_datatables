@@ -1,7 +1,7 @@
 <!-- This inlcude file supplies all the additional files needed by the datatables component  -->
 <script src="{{=URL('static','js/common.js')}}" type="text/javascript"></script>  
 
-<link rel="stylesheet" type="text/css" href="/smartdeck/static/css/smartdeck-datatables.css">
+<link rel="stylesheet" type="text/css" href="{{=URL('static','css/web2py-datatables.css')}}">
 
 <!-- *** Include whichever datatables extensions you need. See https://datatables.net/download/release *** -->
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
