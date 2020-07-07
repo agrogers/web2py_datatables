@@ -22,7 +22,7 @@ def TableDefaults(DataTableName, dt_settings={}):
     dt_settings['DataTableName'] = DataTableName
     dt_settings['TableName'] = DataTableName
 
-    if DataTableName == 'ALL Settings in Alpabetical order':
+    if DataTableName == 'ALL Settings in Alphabetical order':
         dt_settings['AddURL'] = ''                              # The URL of the controller which supplies the form for the 'add' dialog.
         dt_settings['EditURL'] = ''                             # The URL of the controller which supplies the form for the 'edit' dialog.
         dt_settings['Alignment'] = {}                           # Options: {'id':'dt-center','fldname':'dt-right'}.  Specify the alignment of cell text in the column. By default 'id','boolean','integer','double','date','time','datetime','big-int','big-id' are centred.
@@ -30,18 +30,19 @@ def TableDefaults(DataTableName, dt_settings={}):
         dt_settings['BooleanReplacment'] = {True:'Yes', False:'No',None:'No'}       # Dictionary for True, False, None.  We add hidden text to checkbox fields so that we can search on that field. The dictionary determines what hidden text is included.
         dt_settings['Buttons'] = ['delete','add','edit']        # all, add, delete, edit, print 
         dt_settings['ChildFields'] = []                         # Options: a list of field names.  Forces those fields into the expandable datatable child row
+        dt_settings['ColumnNames'] = {":Build":"Build"}         # Dictionary of fieldnames and column names. Sets the column heading to the value specified.
         dt_settings['common_filter'] = True                     # Ignore the common_filter set in the table definition used to restrict what records are returned
         dt_settings['ControlFields'] = [':control',':edit']     # Special fields that are usually added to the left side of the grid.
         dt_settings['ControlLinks'] = {':edit': 'edit_dialog'}  # Dictionary indicating what control fields link to. 'edit_dialog' identifies the default edit dialog.
         dt_settings['DisabledFields'] = []                      # Which fields should be displayed disabled in the edit and add forms.
         dt_settings['DOM'] = ''                                 # See Datatables.net for info  Example: 'Bprf<t>ip'. This value overrides the Show options below.
         dt_settings['ElementID'] = f'DT-{DataTableName}'        # 'ElementID': This must remain the same if you want the state of the table to be restored.
-        dt_settings['Fields'] = [':Organisations']              # A list of table and special fields. It allows for custom ordering of fields.
+        dt_settings['Fields'] = [':Organisations']              # A list of table and special fields. It allows for custom ordering of fields. Fieldnames that start with a ':' are treated differently (by default their width is set to 10px, type is set to Boolean, it is not searchable or orderable)
         dt_settings['FieldTypes'] = {}                          # A dictionary that allows your to override the actual type of the field. This allows specifying extra types such as 'image'. It's useful when a field holds an image and you want to display it as an image.
         dt_settings['HiddenFields'] = []                        # A list of field names. When empty, the created_by, created_on etc fields are hidden
         dt_settings['HideReferenceFields'] = ['modified_by','created_by']           # List of fieldnames. Defaults to hiding a few common fields. Field names can be specified as table.field or just field. The later will remove the same field from all tables.
         dt_settings['IDcolumnNumber'] = ''                      # You do not set this value. It holds the field index for the 'id' column.
-        dt_settings['Images'] = {'MyFieldName1': {'url':'ImgURL','width':'16px'}}   # A dictionary of dictionaries used to show an image instead of the cell text. Normally  used in conjunction with the Links setting
+        dt_settings['Images'] = {'MyFieldName1': {'url':'ImgURL','width':'16px','Label':'Hover Label'}}   # A dictionary of dictionaries used to show an image instead of the cell text. Normally used in conjunction with the Links setting
         dt_settings['Info'] = None                              # Extra info to show below the heading.
         dt_settings['Links'] = {'MyFieldName1':'MyURL1','MyFieldName2':'MyURL2'}    # A dictionary of field:url. The fieldname must appear in one of the Field settings in order to know where to place the link
         dt_settings['Orderable'] = []                           # a list of fieldnames. Specifies which columns can be ordered.
@@ -59,7 +60,7 @@ def TableDefaults(DataTableName, dt_settings={}):
         dt_settings['TableName'] = DataTableName                # Defaults to the DataTableName function parameter
         dt_settings['Tabs'] = True                              # Options: True, False.  Shows tabs in the add and edit dialog.
         dt_settings['UseRepresent'] = True                      # Options: True, False.  Uses the Represent settings in the table to render records. Disabling this can improve rendering time significantly
-        dt_settings['Widths'] = {':control':'10px',':Build':'10px'}                 # Dictionary of field and width in pixels
+        dt_settings['Widths'] = {'FieldName':'10px'}            # Dictionary of field and width in pixels
 
     elif DataTableName == 'auth_user':
         dt_settings['PageHeading'] = "Users"
@@ -84,7 +85,6 @@ def TableDefaults(DataTableName, dt_settings={}):
                                 ':FullDetails': {'url':URL('static','img/icons/set1/svg/full_card_details.svg')},
                                 'Preview': {'url':URL('static','img/icons/set1/svg/full_card_details.svg')}
                                 }
-        dt_settings['Widths'] = {':control':'10px',':Build':'10px',':Decks':'10px',':CardMaster':'10px',':FullDetails':'10px','Preview':'10px'}
 
     elif DataTableName == 'CardCategory':
         dt_settings['PageHeading'] = 'Card Categories'
@@ -125,7 +125,6 @@ def TableDefaults(DataTableName, dt_settings={}):
             dt_settings['ShowFooter'] = False
             dt_settings['Searchable'] = ['None']
 
-
     elif DataTableName == 'CardStructure':
         dt_settings['Fields'] = [':Cards','LongName', 'ShortName','Lang']
         dt_settings['PageHeading'] = DataTableName 
@@ -146,15 +145,15 @@ def TableDefaults(DataTableName, dt_settings={}):
         dt_settings['HiddenFields'] = ['ChildDeckIDList']
         dt_settings['PrependText'] = {':control': ''}
         dt_settings['Searchable'] = ['LongName','ShortName','CardCriteria','ChildDeckIDList','ParentDeckIDList','DefaultCardStructureID']
-        dt_settings['Widths'] = {':control':'10px', ':Build':'10px', 'ParentDecks':'1px', ':DeckChildren':'10px', ':Cards':'10px'}
+        dt_settings['Widths'] = {'ParentDecks':'1px'}
         dt_settings['UseTabs'] = [{'Field':'id','Label':'General'},{'Field':'ChildDeckIDList','Label':'Related Decks'},{'Field':'QuestionCardSize','Label':'Sizes'},{'Field':'PresentationOptions','Label':'Other'}]
         dt_settings['Links'] = {':Build': URL('deckcard','DeckBuilder',args=['{id}']),
                                 ':Cards': URL('datatable','show',args=['DeckCard'], vars={'DeckID':'{id}'}),
                                 ':DeckChildren': URL('datatable','show',args=['DeckChild'], vars={'DeckID':'{id}'})
                                 }
-        dt_settings['Images'] = {   ':Build': {'url':URL('static','img/icons/set1/svg/deck_builder4.svg')},
-                                    ':Cards': {'url':URL('static','img/icons/set1/svg/cards.svg')},
-                                    ':DeckChildren': {'url':URL('static','img/icons/set1/svg/deck_children.svg')}
+        dt_settings['Images'] = {   ':Build': {'url':URL('static','img/icons/set1/svg/deck_builder4.svg'),'Label':'Build Deck'},
+                                    ':Cards': {'url':URL('static','img/icons/set1/svg/cards.svg'),'Label':'Deck Cards'},
+                                    ':DeckChildren': {'url':URL('static','img/icons/set1/svg/deck_children.svg'),'Label':'Child Decks'}
                                     }
 
     elif DataTableName == 'DeckCard':
@@ -194,14 +193,17 @@ def TableDefaults(DataTableName, dt_settings={}):
         dt_settings['Alignment'] = {'Icon':'dt-center'}
         dt_settings['UseRepresent'] = False      # Options: True, False
 
-    elif DataTableName == 'Organisation':
+    elif DataTableName in ['Organisation','Organisation2']:
         dt_settings['PageHeading'] = "Organisations"
+        dt_settings['TableName'] = 'Organisation'
         dt_settings['Alignment'] = {'id':'dt-center','ShortName':'dt-center','Active':'dt-center','Logo':'dt-center'}
         dt_settings['Fields'] = [':Users','id','Logo']
         dt_settings['Links'] = {':Users': URL('datatable','show',args=['OrganisationUserAdmin'],vars={'OrganisationID':'{id}'})}
-        dt_settings['Images'] = {':Users': {'url':URL('static','img/icons/set1/svg/users.svg')}}
+        dt_settings['Images'] = {':Users': {'url':URL('static','img/icons/set1/svg/users.svg'),'Label':'Users'}}
         dt_settings['FieldTypes'] = {'Logo':'image'}
-        dt_settings['Widths'] = {':Users':'10px','Logo':'10px'}                 # Dictionary of field and width in pixels   
+        dt_settings['Widths'] = {'Logo':'10px'}                 # Dictionary of field and width in pixels   
+        if DataTableName == 'Organisation2':
+            dt_settings['common_filter'] = False
 
     elif DataTableName == 'OrganisationUser' or DataTableName == 'OrganisationUserAdmin':
         dt_settings['TableName'] = 'OrganisationUser'
@@ -210,7 +212,7 @@ def TableDefaults(DataTableName, dt_settings={}):
         dt_settings['Fields'] = [':UserCards',':UserDecks','UserID','IsTeacher','IsStudent','TotalPoints','TotalCards','DueCards','ActiveCards','LearntCards']
         dt_settings['AllFields'] = 'ChildRow'
         dt_settings['ShowReferences'] = 'All'
-        dt_settings['Widths'] = {':UserCards':'10px',':UserDecks':'10px','IsTeacher':'10px','IsStudent':'10px','TotalPoints':'10px','TotalCards':'10px','DueCards':'10px','ActiveCards':'10px','LearntCards':'10px'}
+        dt_settings['Widths'] = {'IsTeacher':'10px','IsStudent':'10px','TotalPoints':'10px','TotalCards':'10px','DueCards':'10px','ActiveCards':'10px','LearntCards':'10px'}
         dt_settings['Tabs'] = [{'Field':'id','Label':'General'},{'Field':'IsTeacher','Label':'Type'},{'Field':'TotalPoints','Label':'Points'},{'Field':'Progress','Label':'Cards'}]
         dt_settings['TabsAdding'] = [{'Field':1,'Label':'Personal'},{'Field':9,'Label':'Address'},{'Field':13,'Label':'Organisation'},{'Field':22,'Label':'Points'},{'Field':26,'Label':'Cards'}]
         dt_settings['TabsEditing'] = dt_settings['TabsAdding']
@@ -233,15 +235,22 @@ def TableDefaults(DataTableName, dt_settings={}):
         dt_settings['PageHeading'] = "Teaching Groups"
         dt_settings['Fields'] = [':Students',':Decks']
         dt_settings['Links'] = {':Students': URL('datatable','show',args=['TeachingGroupStudent'],vars={'TeachingGroupID':'{id}'}),
-                                ':Decks': URL('datatable','show',args=['TeachingGroupDeck'],vars={'TeachingGroupID':'{id}'})
+                                ':Decks': URL('datatable','show',args=['TeachingGroupDeck2'],vars={'TeachingGroupID':'{id}'})
                                 }
-        dt_settings['Images'] = {':Students': {'url':URL('static','img/icons/set1/svg/teaching_group_students.svg'),'width':'20px'},
-                                ':Decks': {'url':URL('static','img/icons/set1/svg/decks.svg'),'width':'20px'},
+        dt_settings['Images'] = {':Students': {'url':URL('static','img/icons/set1/svg/teaching_group_students.svg'),'width':'20px','Label':'Students'},
+                                ':Decks': {'url':URL('static','img/icons/set1/svg/decks.svg'),'width':'20px','Label':'Decks'},
                                  }
-        dt_settings['Widths'] = {':Students':'10px',':Decks':'10px'}               
 
-    elif DataTableName == 'TeachingGroupDeck':
+    elif DataTableName in ['TeachingGroupDeck', 'TeachingGroupDeck2']:
+        dt_settings['TableName'] = 'TeachingGroupDeck'
         dt_settings['PageHeading'] = "Group Decks"
+        dt_settings['Fields'] = [':Build',':Deck','DeckID','TeachingGroupID']
+        dt_settings['Links'] = {':Build': URL('deckcard','DeckBuilder',args=['{DeckID}']),
+                                ':Deck': URL('datatable','show',args=['Deck'],vars={'id':'{DeckID}'})}
+        dt_settings['Images'] = {':Build': {'url':URL('static','img/icons/set1/svg/deck_builder4.svg'),'Label':'Build Deck'},
+                                 ':Deck': {'url':URL('static','img/icons/set1/svg/deck5.svg'),'Label':'Deck Details'}}
+        if DataTableName == 'TeachingGroupDeck2':
+            dt_settings['ChildFields'] = ['TeachingGroupID']
 
     elif DataTableName == 'TeachingGroupStudent':
         dt_settings['PageHeading'] = "Students in Group"

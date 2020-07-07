@@ -336,7 +336,7 @@ def datatable_data(args, vars = None, custom_settings = None):  # Initialises th
                             SeparatorChar = ', '
 
                         link_vars = {}
-                        link_vars[LinkFieldName] = 777  # Just need a placeholder for substituion purposes later on                    
+                        link_vars[LinkFieldName] = 777  # Just need a placeholder for substituion purposes later on but it needs to be a value that the URL function wont complain about                   
                         Link = A(XML(link_html),_href=URL('datatable','show',args=[LinkTableName], vars=link_vars))
                         Link = f'<span class="reference_link">{Link}</span>' # div needed for onhover popup
                         cell_reference_template = str(Link) if cell_reference_template == '' else cell_reference_template + SeparatorChar + str(Link)
@@ -418,7 +418,9 @@ def datatable_data(args, vars = None, custom_settings = None):  # Initialises th
                     style= ''
                     width = get_deep(dt_settings['Images'][f],'width',None)
                     if width: style += 'width:' + width + ';'
-                    cell += str(IMG(_class=css_class, _style=style, _src=dt_settings['Images'][f]['url']))
+                    cell_img = str(IMG(_class=css_class, _style=style, _src=dt_settings['Images'][f]['url']))
+                    key = f"{f}.Label"
+                    cell += f'<span class="reference_link">{cell_img}<span>{get_deep(dt_settings["Images"],key,"")}</span></span>'  # div needed for onhover popup
                 
                 I="Add links for each referenced table."
                 if f == ':references':  
@@ -470,7 +472,6 @@ def datatable_data(args, vars = None, custom_settings = None):  # Initialises th
                     link = ParseLink(dt_settings['Links'][f], recs.records[row_num][TableName])
                     if link == "edit_dialog":
                         cell = f"""<a class="edit-icon" RowID="{r['id']}" href="javascript:void(0);"> {XML(cell)} </a>""" 
-                        # cell = """<a href="javascript:void(0);" onclick="DatatableGrid.HandleTableEvent('edit','#%s-dialog',%s)"> %s </a>""" % (dt_settings['ElementID'], r['id'], XML(cell))
                     else:
                         if cell == '': cell = f
                         cell = A(XML(cell), _href='%s'% (link)) 
@@ -482,20 +483,27 @@ def datatable_data(args, vars = None, custom_settings = None):  # Initialises th
             data.append(row)
             row_num += 1
         Timer3.stop()
-        I="Build the Title and subtitle"
-        t = ""
         Timer4.start()
-        for k in SubTitle:
-            if t != "": t += " and "
-            # t = t + "%s %s" % (get_deep(SubTitle[k],'Column',''), get_deep(SubTitle[k],'Value',''))
-            t = t + "%s %s" % (k, SubTitle[k])
-            dt_settings['PageSubHeading'] += t
+        I="Build the Title and subtitle"
+        if SubTitle:
+            t = ""
+            if recs:
+                # Try and convert ids into their human readable represents value
+                for row in recs[0:1].render():
+                    for k in SubTitle:
+                        SubTitle[k] = row[k]
 
-        if dt_settings['PageSubHeading']:
-            dt_settings['PageSubHeading'] = IMG(_class='datatable-subheading-filter', _src=URL_icon_set + 'svg/filter.svg') + dt_settings['PageSubHeading']
+            for k in SubTitle:
+                if t != "": t += " and "
+                # t = t + "%s %s" % (k, SubTitle[k])
+                t += f"{k} = {SubTitle[k]}"
+                dt_settings['PageSubHeading'] += t
 
-        if not dt_settings['Icon']: dt_settings['Icon'] = get_deep(table,'_Icon',None)
-        if dt_settings['Icon']: dt_settings['Icon'] = IMG(_class='datatable-icon', _src=dt_settings['Icon'])
+            if dt_settings['PageSubHeading']:
+                dt_settings['PageSubHeading'] = IMG(_class='datatable-subheading-filter', _src=URL_icon_set + 'svg/filter.svg') + dt_settings['PageSubHeading']
+
+            if not dt_settings['Icon']: dt_settings['Icon'] = get_deep(table,'_Icon',None)
+            if dt_settings['Icon']: dt_settings['Icon'] = IMG(_class='datatable-icon', _src=dt_settings['Icon'])
 
         I="Build the columnDef data to hide,order,search columns etc"
         columns = []
@@ -531,6 +539,9 @@ def datatable_data(args, vars = None, custom_settings = None):  # Initialises th
             I="Set widths"
             if fld in dt_settings['Widths']:
                 col['width'] = dt_settings['Widths'][fld]
+            elif fld[:1] == ':':
+                # Special fields which start with a ':' often need to be as small as possible. So set that here.
+                col['width'] = '10px'
 
             I="Set Searchable"
             col['searchable'] = (fld in dt_settings['Searchable'] or dt_settings['Searchable'] == [] or dt_settings['Searchable'][0]=='ALL')
@@ -625,8 +636,8 @@ def GridDefaults(DataTableName, custom_settings=None, vars = None):
         dt_settings['ShowRecordCount'] = 'Bottom'   # Options: Top, Bottom, Both
         dt_settings['ShowSearch'] = 'Top'           # Options: Top, Bottom, Both, None
         dt_settings['PageLength'] = 10              # How many records to show per page
-        dt_settings['ControlImages'] = {':control': {'url':URL('static','img/icons/set1/svg/expand2.svg'),'width':'10px'},
-                                ':edit': {'url':URL('static','img/icons/set1/svg/edit-pencil.svg'),'width':'16px'}
+        dt_settings['ControlImages'] = {':control': {'url':URL('static','img/icons/set1/svg/expand2.svg'),'width':'10px','Label':''},
+                                ':edit': {'url':URL('static','img/icons/set1/svg/edit-pencil.svg'),'width':'16px','Label':''}
                                 }
         dt_settings['ControlFields'] = [':control',':edit']
         dt_settings['ControlLinks'] = {':edit': 'edit_dialog'}
@@ -679,7 +690,7 @@ def GridDefaults(DataTableName, custom_settings=None, vars = None):
                     dt_settings['Orderable'].append(fld)
 
             if not get_deep(dt_settings['Alignment'], fld, None):
-                if fld[:1] == ":":  # this is a control field
+                if fld[:1] == ":":  # this is a control field so treat like a boolean to get center aligned
                     FldType = 'boolean'
                 else:
                     FldType = db[dt_settings['TableName']][fld].type
