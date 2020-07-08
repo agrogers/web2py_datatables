@@ -2,8 +2,10 @@ The application has one user: admin and password: admin
 
 I don't think you need to be logged in to access the /application/datatables/show
 
-The files you need to make the integration work are:
+Python 3 Required.
 
+The files you need to make the integration work are:
+------------------------------------------------------
 controllers 
 > datatable.py
 
