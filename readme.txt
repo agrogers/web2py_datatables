@@ -5,7 +5,15 @@ I don't think you need to be logged in to access the /application/datatables/sho
 Python 3 Required.
 
 The files you need to make the integration work are:
-------------------------------------------------------
+====================================================
+Python Packages:
+----------------
+* simplejson (install using 'pip install simplejson')
+    - https://stackoverflow.com/questions/718040/how-to-install-simplejson-package-for-python
+    - https://pypi.org/project/simplejson/
+
+Application Files:
+------------------
 controllers 
 > datatable.py
 
