@@ -31,21 +31,21 @@ function DatatableGrid(init_dt_settings, init_TargetElement){
         _ElementID = `#${_ElementIDname}`;
 
         // Set the headings and icon
-        if (dt_settings.Icon == null) {
+        if (DT_Settings.Icon == null) {
             $(`${_ElementID}-datatable-icon`).remove()
         } else {
-            $(`${_ElementID}-datatable-icon`).html(dt_settings.Icon);
+            $(`${_ElementID}-datatable-icon`).html(DT_Settings.Icon);
         }
-        $(`${_ElementID}-datatable-heading1`).html(dt_settings.PageHeading);
-        if (dt_settings.PageSubHeading == "") {
+        $(`${_ElementID}-datatable-heading1`).html(DT_Settings.PageHeading);
+        if (DT_Settings.PageSubHeading == "") {
             $(`${_ElementID}-datatable-subheading1`).remove()
         } else {
-            $(`${_ElementID}-datatable-subheading1`).html(dt_settings.PageSubHeading);
+            $(`${_ElementID}-datatable-subheading1`).html(DT_Settings.PageSubHeading);
         }
-        if (dt_settings.Info == null) {
+        if (DT_Settings.Info == null) {
             $(`${_ElementID}-datatable-info`).remove()
         } else {
-            $(`${_ElementID}-datatable-info`).html(dt_settings.Info);
+            $(`${_ElementID}-datatable-info`).html(DT_Settings.Info);
         }
         
         // Set default urls for add and edit
@@ -65,15 +65,15 @@ function DatatableGrid(init_dt_settings, init_TargetElement){
         RowID = null;
         if (DT_Settings.Responsive) {Responsive={details: { type: 'column'}} } else {Responsive=false};
         Table  = _Element.DataTable( {
-            dom: dt_settings.DOM,
-            data: dt_settings.data,
+            dom: DT_Settings.DOM,
+            data: DT_Settings.data,
             deferRender: true,
             rowId: 'ID',
             pageLength: DT_Settings.PageLength,
             buttons: [], //['selectAll','excel','print','colvis'],
-            order: dt_settings.order,
-            columns: dt_settings.columns,
-            columnDefs: dt_settings.columnDefs,
+            order: DT_Settings.order,
+            columns: DT_Settings.columns,
+            columnDefs: DT_Settings.columnDefs,
             select: {style: 'single', toggleable: false },
             responsive: Responsive,
             autoWidth: false,
@@ -92,13 +92,13 @@ function DatatableGrid(init_dt_settings, init_TargetElement){
         // Add the column search input boxes
         i = 0;
         $(`${_ElementID} tfoot th`).each( function () {
-            fld = dt_settings.Fields[i];
-            if (fld in dt_settings.SearchFieldSize) {
-                size = dt_settings.SearchFieldSize[fld]
+            fld = DT_Settings.Fields[i];
+            if (fld in DT_Settings.SearchFieldSize) {
+                size = DT_Settings.SearchFieldSize[fld]
             } else {
                 size = 15;
             }
-            if (dt_settings.Searchable.includes(fld)) {
+            if (DT_Settings.Searchable.includes(fld)) {
                 var title = $(this).text();
                 $(this).html( `<input class="search" size="${size}" type="text" placeholder="" />` );
             } else {
@@ -138,7 +138,8 @@ function DatatableGrid(init_dt_settings, init_TargetElement){
             Table.draw();
         }
         // Add the required buttons
-        (dt_settings.Buttons).forEach(function (item, index) {
+        CustomButtonList = [];
+        (DT_Settings.Buttons).forEach(function (item, index) {
             if (item == 'Add') {
                 Table.button().add( 0, {
                     text: "Add", //data-action="Add" 
@@ -161,7 +162,30 @@ function DatatableGrid(init_dt_settings, init_TargetElement){
                     action: function ( e, dt, button, config ) {
                         HandleTableEvent('delete', null, _this.CurrentID);}
             })};
+            if ( !(['Add','Edit','Delete'].includes(item)) ) {
+                CustomButtonList.push ({
+                                        text: item,
+                                        extend: "selectedSingle",
+                                        action: function ( e, dt, button, config ) {
+                                            alert('Hi')}
+                                        })
+            }
         })
+        // Adds an Action button with a popdown button list.
+        if (DT_Settings.CustomButtons != null) {
+            for (var k in DT_Settings.CustomButtons) {
+                CustomButtonList.push ({
+                    text: k,
+                    extend: DT_Settings.CustomButtons[k].Extend,
+                    action: function ( e, dt, button, config ) {HandleCustomButton(e, dt, button, config)}
+                    })                
+            }
+            Table.button().add( 0, {
+                text: 'Actions',
+                extend: "collection",
+                autoClose: true,
+                buttons: CustomButtonList
+        })}
         // Attach events to the table
         Table.on( 'select', function () {
             var selected = Table.rows( { selected: true } );
@@ -200,6 +224,14 @@ function DatatableGrid(init_dt_settings, init_TargetElement){
         submitForm()
     }
     this.submitForm = function() {
+        // Disable the submit button
+        SubmitButtonElement = $(`${_ElementID}-submit`);
+
+        if (SubmitButtonElement.prop('disabled')) {return}  // We don't want to submit this twice. I am not sure if disabling the button actually kills the onclick event. So this is to be sure.
+
+        SubmitButtonElement.html("Saving...");
+        SubmitButtonElement.prop('disabled', true);
+        
         if (CurrentAction == 'edit') {
             url = `${EditURL}`;
         } else {
@@ -210,6 +242,7 @@ function DatatableGrid(init_dt_settings, init_TargetElement){
         
         url = ParseURL(url, _this.CurrentID);
         FormElement = `${_ElementID}-dialog-form`;
+        // Bulild the options for the ajax call. Using the web2py ajax call because i cant the normal ajax call to process the form properly
         Options = {success: function(data, textStatus) {
                         EnableOrDisableInputs(false,DisabledFields); // Disable controls
                         result = JSON.parse(data);
@@ -218,13 +251,14 @@ function DatatableGrid(init_dt_settings, init_TargetElement){
                             
                             if (CurrentAction == 'edit') {
                                 Table.row(RowID).data(UpdatedRecord).draw('full-hold');
+                                FlashRow(RowID);
                                 SendUploadFileToServer(url, result.id);  // Check if we need to save any files. This can be done via the standard AJAX method so do separately. Something about multipart forms.
 
                             } else {
                                 SendUploadFileToServer(url, result.id);  // Check if we need to save any files. This can be done via the standard AJAX method so do separately. Something about multipart forms.
                                 // Adding record
                                 Table.row.add(UpdatedRecord);
-                                Table.order([dt_settings.IDcolumnNumber,'desc']);
+                                Table.order([DT_Settings.IDcolumnNumber,'desc']);
                                 Table.draw();
                             }
                             // alert("Success!" + data);
@@ -251,9 +285,34 @@ function DatatableGrid(init_dt_settings, init_TargetElement){
         })
 
     }
-    function ParseURL(url, ID) {
+    function ParseURL(url, ID, RowData) {  // Replace the fieldnames in {} with values
+
+        url = url.replace('%7B', '{');
+        url = url.replace('%7D', '}');
+        url = url.replace('%21', '!');
         url = url.replace('{id}', ID);
         url = url.replace('?{VARS}', window.location.search)
+        KeepLooking = true;
+
+        while (KeepLooking && RowData != null) {
+            i = 0
+            StartPos = url.indexOf("{")
+            EndPos = url.indexOf("}")
+
+            if (StartPos == -1 || EndPos == -1 || EndPos < StartPos) {
+                KeepLooking = false
+            } else {
+                FieldName = url.substring(StartPos+1,EndPos)
+                if (FieldName in RowData) {
+                    FieldValue = RowData[FieldName]
+                } else {
+                    FieldValue = ''
+                }
+            }
+            if (KeepLooking) {
+                url = url.replace(`{${FieldName}}`,FieldValue)
+            }
+        }
         return url
     }
     function AddOrEditRecord(Target, ID=null) {
@@ -261,6 +320,10 @@ function DatatableGrid(init_dt_settings, init_TargetElement){
         FormElement = `${_ElementIDname}-dialog-form`;
         FormElementDiv = $(`#${FormElement}-div`);  
         FormElementDiv.html("Loading...");
+
+        SubmitButtonElement = $(`${_ElementID}-submit`);
+        SubmitButtonElement.html("Submit");
+        SubmitButtonElement.prop('disabled', false);
 
         $(Target).modal('show');
         if (CurrentAction == 'edit') {
@@ -285,7 +348,7 @@ function DatatableGrid(init_dt_settings, init_TargetElement){
                     FormElementDiv.html(result.form);  
                     form = FormElementDiv.children('form');
                     form.attr('id',FormElement);
-                    if (Tabs != null) {AddTabs(FormElementDiv, Tabs);}
+                    if (Tabs != false) {AddTabs(FormElementDiv, Tabs);}
                     // Disable the requested fields. We do it this way because web2py, when building the form, will hide controls that are not writable. But usually i want to see that field so i know exactly when i am adding too.
                     DisabledFields = result.DisabledFields;
                     EnableOrDisableInputs(false,DisabledFields);
@@ -304,7 +367,7 @@ function DatatableGrid(init_dt_settings, init_TargetElement){
                 // Table.rows( { selected: true } )[0].remove();
                 // Table.draw(false);
 
-                url = `/smartdeck/datatable/delete/${dt_settings.DataTableName}/${ID}`;
+                url = `/smartdeck/datatable/delete/${DT_Settings.DataTableName}/${ID}`;
                 $.ajax({url: url,
                         success: function(result){
                             result = JSON.parse(result);
@@ -320,6 +383,79 @@ function DatatableGrid(init_dt_settings, init_TargetElement){
 
         }
     }
+    function HandleCustomButton(e, dt, button, config) {  // Currently assumes that the 'action' is a controller function. So simply parses and processes the expected URL
+        
+        Continue = true;
+        ButtonDetails = DT_Settings.CustomButtons[button[0].innerText];
+        if (ButtonDetails.Prompt != null) {
+            Continue = confirm(ButtonDetails.Prompt)
+        }
+        if (Continue) {
+            // vars = {'DataTableName':DT_Settings.DataTableName,'id':Current_id,'ajax':true}
+            url = `${ButtonDetails.url}`;
+            JoinChar = '&';
+            if (!(url.includes("?"))) {JoinChar = '?'};  // Need to check if the supplied url has no vars
+            url += `${JoinChar}DataTableName=${DT_Settings.DataTableName}&id=${Current_id}&ajax=true`  // Always append the table name and the current record id to keep things simple
+            url = ParseURL(url, _this.CurrentID, _this.Data)
+
+            // json_vars = JSON.stringify(vars)
+            
+            if (ButtonDetails.SuccessAction=='ImmediateRedirect') {
+                window.location.replace(url)
+            } else {
+                $.ajax({url: url,
+                    dataType: 'json', // The datatype of the result. json for objects, remove for HTML
+                    contentType: 'application/json; charset=utf-8',
+                    // data: json_vars,
+                    type: 'POST',
+                    success: function(result){
+                        // result = JSON.parse(data);
+                        if (result.Success) {
+                            if (ButtonDetails.SuccessAction == 'RefreshRecord') {
+                                UpdatedRecord = result.record;
+                                Table.row(RowID).data(UpdatedRecord).draw('full-hold');
+                                FlashRow(RowID);
+                                
+                            } else if (ButtonDetails.SuccessAction == 'RefreshPage') {
+                                window.location.reload(false);
+                            } else if (ButtonDetails.SuccessAction == 'InsertRecord') {
+                                UpdatedRecord = result.record;
+                                Table.row.add(UpdatedRecord);
+                                Table.order([DT_Settings.IDcolumnNumber,'desc']);
+                                Table.draw();
+                                FlashRow(1);
+                            }
+                        } else {
+                            // Should flash an error message.
+                        }
+                    },
+                    error: function(data,textStatus) {
+                        alert('Error in AJAX call.');
+                    }            
+                })  
+            }
+        }
+    }
+    function FlashRow(RowID) {
+        var nTr = Table.row(RowID).nodes();
+        //Color row background in HSL space (easier to manipulate fading)
+        // Set the starting color to green
+        $(nTr[0]).find('td').css('background-color','hsl(121,58%,43%');  // color = #2ead31 .  Use https://convertingcolors.com/ to get colors
+
+        var d = 1000;
+        for(var i=43; i<=100; i=i+0.1){ //i represents the lightness
+            d  += 6;
+            (function(ii,dd){
+                setTimeout(function(){
+                    if (ii>99) {
+                        $(nTr[0]).find('td').css('background-color',''); 
+                    } else {
+                        $(nTr[0]).find('td').css('background-color','hsl(121,58%,'+ii+'%)'); 
+                    }
+                }, dd);    
+            })(i,d);
+        }
+    }
     function HandleTableEvent(Action, Target = null, ID = null) {
         CurrentAction = Action;
         if (Action == "edit" | Action == "add") {
@@ -327,8 +463,6 @@ function DatatableGrid(init_dt_settings, init_TargetElement){
         } else if (Action == "delete") {
             DeleteRecord(ID);
         }
-
-        // alert(Action + " = " + Target);
     }
     function AddTabs(FormElementDiv, Tabs) {
 
@@ -361,16 +495,16 @@ function DatatableGrid(init_dt_settings, init_TargetElement){
 
         } else {
             // Build an array to use
-            FieldsPerPage = 6;
+            FieldsPerTab = DT_Settings.FieldsPerTab;
             FieldCnt = $set.length - 1;  // The submit row is included in this set
-            TabPageTotal = Math.ceil(FieldCnt/FieldsPerPage);
+            TabPageTotal = Math.ceil(FieldCnt/FieldsPerTab);
             // url_tab_icon = URL_icon_set + '/svg/tab_icon.svg'
             // tab_img = `<img src="${url_tab_icon}" style="width:16px">`
             for (i=1; i<=TabPageTotal; i++) {
                 var T = {}
                 T.Field = i.toString();
                 T.Label = i.toString();
-                T.FieldNumber = FieldsPerPage * (i-1);
+                T.FieldNumber = FieldsPerTab * (i-1);
                 if (T.FieldNumber < LastFieldNumber) {T.FieldNumber = LastFieldNumber+1};
                 TabLabels.push(T)
                 LastFieldNumber = T.FieldNumber

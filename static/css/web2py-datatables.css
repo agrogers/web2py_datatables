@@ -40,6 +40,8 @@ input.search, [type="search"] {
     border-radius: 5px;
     text-indent: 8px;
     width:100%;
+    color: orange;
+    font-weight: 600;
 }
 
 input.search:focus {
@@ -148,12 +150,16 @@ input.search:focus {
   table.dataTable thead .sorting:before {display: none !important;}
   table.dataTable thead .sorting:after {display: none !important;}
   
+  /* ---- Buttons ---- */
   /* Float the top buttons on the right
     .dataTables_wrapper .dt-buttons {
       float:right;
     }
   */
   
+div.dt-button-collection {
+  width: auto !important;
+}
 
 span.numbered-tabs {
   border-style: solid;
@@ -174,10 +180,10 @@ span.numbered-tabs {
   position: relative
 }
 .reference_link img{
-  margin-right: 3px;
-  margin-left: 3px;
-  margin-bottom: 2px;
-  width: 16px;
+  margin-right: 1px;
+  margin-left: 1px;
+  margin-bottom: 0px;
+  width: 18px;
 }
 .reference_link span{
   position: absolute;
@@ -207,4 +213,13 @@ span.numbered-tabs {
   padding: 8px 15px; */
   visibility: visible;
   opacity: 1; 
+ }
+
+ /* --- Bootstrap Override --- */
+ .table-bordered th, .table-bordered td {
+   border-style: hidden;
+ }
+
+ table.dataTable thead th, table.dataTable thead td {
+   border-style: hidden !important;
  }

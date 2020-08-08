@@ -5,7 +5,7 @@ import simplejson as json
 import logging
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# Gets a value from a nested value and returns None if any key doesn't exist
+# Gets a value from a nested value and returns None if any key doesn't exist. Example get_deep(mydict, 'key1.key2.key3', 'DefaultValue')
 def get_deep(dictionary, keys, default=None):
 
     def Parse(val):
@@ -19,7 +19,6 @@ def get_deep(dictionary, keys, default=None):
         else:
             return val
 
-    # return functools.reduce(lambda d, key: d.get(key, default) if isinstance(d, dict) else default, keys.split("."), dictionary)
     if not dictionary or not keys: return default
     d = dictionary
     # Check if the keys is a simple boolean or number. If it is, we cant split it (and dont need to. Just turn it into a list for processing.)
@@ -41,7 +40,7 @@ def get_deep(dictionary, keys, default=None):
     return default
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------
-def AddLogEntry(LogType="Error", LogFunction = "", LogMessage = "", EventAction='',ObjectID=None, UserID=None, Settings=None, InsertOrUpdate='Update'):
+def AddLogEntry(LogType="Error", LogFunction = "", LogMessage = "", EventAction='',ObjectID=None, UserID=None, Settings=None, InsertOrUpdate='Update', Processed=False):
     # LogType: Error, [TableName] etc
     
     if (ObjectID or UserID) and InsertOrUpdate=='Update':
@@ -49,7 +48,7 @@ def AddLogEntry(LogType="Error", LogFunction = "", LogMessage = "", EventAction=
             # Assumes ObjectID = UserCardID
             if not Settings: Settings = 'ObjectId=UserCardID'
 
-        db.EventLog.update_or_insert(LogType=LogType, EventAction=EventAction, ObjectID=ObjectID, UserID=UserID, Processed=False, Settings=Settings)
+        db.EventLog.update_or_insert(LogType=LogType, EventAction=EventAction, ObjectID=ObjectID, UserID=UserID, Processed=Processed, Settings=Settings)
     else:
         # It's probably an error or operational or debugging message
         db.EventLog.insert(LogType=LogType, LogFunction = LogFunction, LogMessage = LogMessage, EventAction=EventAction, Settings=Settings, ObjectID=ObjectID, UserID=UserID, )
@@ -63,7 +62,7 @@ def LogError(Controller, e=None, ExtraInfo = "", LogType = 'Error', ReturnJson=F
     curframe = inspect.currentframe()
     ErrFunction = inspect.getouterframes(curframe, 2)
     Msg = sys.exc_info()[0]
-    LogFunction = "[%s] %s > %s > %s" %(Controller, ErrFunction[1].function, ErrFunction[2].function, ErrFunction[3].function) 
+    LogFunction = "%s < %s < %s [%s]" %(ErrFunction[1].function, ErrFunction[2].function, ErrFunction[3].function, Controller)
 
     if e:
         if hasattr(e, 'message'):
